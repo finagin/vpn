@@ -1,0 +1,55 @@
+services:
+    laravel.test:
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.services.${COMPOSE_PROJECT_NAME:-laravel}.loadbalancer.server.port=80'
+            - 'traefik.docker.network=traefik'
+        depends_on:
+            pgsql:
+                required: false
+                condition: service_healthy
+            redis:
+                required: false
+                condition: service_healthy
+            memcached:
+                required: false
+                condition: service_healthy
+            typesense:
+                required: false
+                condition: service_healthy
+            minio:
+                required: false
+                condition: service_healthy
+            selenium:
+                required: false
+                condition: service_healthy
+            mailpit:
+                required: false
+                condition: service_started
+        networks:
+            - traefik
+    pgsql:
+        profiles:
+            - pgsql
+    redis:
+        profiles:
+            - redis
+    memcached:
+        profiles:
+            - memcached
+    typesense:
+        profiles:
+            - typesense
+    minio:
+        profiles:
+            - minio
+    selenium:
+        profiles:
+            - selenium
+    mailpit:
+        profiles:
+            - mailpit
+
+networks:
+    traefik:
+        external: true

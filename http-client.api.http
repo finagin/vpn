@@ -1,0 +1,4 @@
+GET {{host}}/test
+Content-Type: application/json
+Accept: application/json
+Authorization: TelegramMiniApp {{telegram_init_data}}

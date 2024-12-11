@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'mini-app' => [
+            'driver' => 'telegram-init-data',
+            'provider' => 'users',
+        ],
     ],
 
     /*

@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+
+    phpVersion: 80225
+
+    level: 8
+
+    paths:
+        - app
+        - config
+        - database
+        - routes

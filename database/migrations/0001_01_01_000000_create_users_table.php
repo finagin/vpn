@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Telegram;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('name');
-            $table->jsonb('telegram')->nullable();
+            $table->foreignIdFor(Telegram::class)->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

@@ -35,4 +35,19 @@ return [
         ],
     ],
 
+    'telegram' => [
+        'bot' => [
+            'token' => env('TELEGRAM_BOT_TOKEN'),
+        ],
+    ],
+
+    'outline' => [
+        'api' => [
+            'host' => env('OUTLINE_API_HOST'),
+            'port' => env('OUTLINE_API_PORT'),
+            'secret' => env('OUTLINE_API_SECRET'),
+            'self_signed' => env('OUTLINE_API_SELF_SIGNED', false),
+        ],
+    ],
+
 ];

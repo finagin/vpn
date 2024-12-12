@@ -23,8 +23,8 @@ readonly class ApiClient
     protected PendingRequest $client;
 
     /**
-     * @param array<array-key, string> $needsCache
-     * @param Collection<array-key, string> $cached
+     * @param  array<array-key, string>  $needsCache
+     * @param  Collection<array-key, string>  $cached
      */
     public function __construct(
         #[Config('services.outline.api.host')] string $host,
@@ -44,7 +44,7 @@ readonly class ApiClient
     }
 
     /**
-     * @param array<array-key, mixed> $args
+     * @param  array<array-key, mixed>  $args
      */
     protected function getCacheKey(...$args): string
     {
@@ -55,7 +55,7 @@ readonly class ApiClient
     }
 
     /**
-     * @param array<array-key, mixed> $arguments
+     * @param  array<array-key, mixed>  $arguments
      * @return mixed
      */
     public function __call(string $name, array $arguments)

@@ -29,15 +29,16 @@ readonly class Service implements Contract
     }
 
     /**
-     * @throws \Illuminate\Http\Client\ConnectionException
      * @return \Illuminate\Support\Collection<array-key, TAccessKey>
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function list(): iterable
     {
         return $this->client
             ->get('access-keys')
             ->collect('accessKeys')
-            ->map([$this, 'enrichAccessKey']);
+            ->map(fn ($key) => $this->enrichAccessKey($key));
     }
 
     /**
@@ -61,8 +62,9 @@ readonly class Service implements Contract
     }
 
     /**
-     * @param TAccessKey $key
+     * @param  TAccessKey  $key
      * @return TAccessKey
+     *
      * @throws \Illuminate\Http\Client\ConnectionException
      */
     private function enrichAccessKey(array $key): array

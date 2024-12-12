@@ -46,9 +46,6 @@ class TelegramGuard implements Guard
         return $this->user = $user;
     }
 
-    /**
-     * @throws \Throwable
-     */
     public function getTelegramForRequest(): ?Telegram
     {
         $initData = collect()
@@ -82,10 +79,9 @@ class TelegramGuard implements Guard
     }
 
     /**
-     * @param array<string, mixed> $credentials
-     * @throws \Throwable
+     * @param  array<string, mixed>  $credentials
      */
-    public function validate(array $credentials = [])
+    public function validate(array $credentials = []): bool
     {
         return ! is_null($telegram = $this->getTelegramForRequest())
         && $this->provider->retrieveByCredentials([

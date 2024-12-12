@@ -23,7 +23,7 @@ interface Contract
     public function get(int $id): array;
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param  array<string, mixed>  $attributes
      * @return TAccessKey
      */
     public function create(array $attributes = []): array;

@@ -48,6 +48,7 @@ class TelegramGuard implements Guard
 
     public function getTelegramForRequest(): ?Telegram
     {
+        /** @var \Illuminate\Support\Collection<array-key, string> $initData */
         $initData = collect()
             ->pipe(function ($collection): Collection {
                 parse_str(
@@ -60,7 +61,7 @@ class TelegramGuard implements Guard
             })
             ->sortKeys();
 
-        if (! hash_equals($initData->pull('hash'), hash_hmac('sha256',
+        if (! hash_equals($initData->pull('hash', ''), hash_hmac('sha256',
             $initData->implode(fn ($value, $key) => "$key=$value", "\n"),
             hash_hmac('sha256', $this->token, 'WebAppData', true)
         ))) {

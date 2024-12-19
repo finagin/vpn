@@ -113,6 +113,17 @@ services:
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
+    init:
+        image: laravelsail/php82-composer:latest
+        volumes:
+            - './:/var/www/html'
+        working_dir: '/var/www/html'
+        command:
+            - 'composer'
+            - 'install'
+            - '--ignore-platform-reqs'
+        profiles:
+            - init
 networks:
     sail:
         driver: bridge

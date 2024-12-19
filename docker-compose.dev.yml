@@ -49,18 +49,6 @@ services:
     mailpit:
         profiles:
             - mailpit
-    init:
-        image: laravelsail/php82-composer:latest
-        volumes:
-            - './:/var/www/html'
-        working_dir: '/var/www/html'
-        command:
-            - 'composer'
-            - 'install'
-            - '--ignore-platform-reqs'
-        profiles:
-            - init
-
 networks:
     traefik:
         external: true

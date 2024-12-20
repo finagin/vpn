@@ -26,8 +26,6 @@ services:
             mailpit:
                 required: false
                 condition: service_started
-        networks:
-            - traefik
     pgsql:
         profiles:
             - pgsql
@@ -49,6 +47,3 @@ services:
     mailpit:
         profiles:
             - mailpit
-networks:
-    traefik:
-        external: true

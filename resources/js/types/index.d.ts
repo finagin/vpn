@@ -14,6 +14,8 @@ export interface Outline {
     name: string;
     url: string;
     spending: string;
-
-    user: User;
 }
+
+export type Response<T> = {
+    data: T;
+};

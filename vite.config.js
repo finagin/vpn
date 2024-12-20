@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
 
-const host = 'vpn.test';
 
 export default defineConfig({
     plugins: [
@@ -12,8 +11,4 @@ export default defineConfig({
         }),
         react(),
     ],
-    server: {
-        host,
-        hmr: { host },
-    },
 });

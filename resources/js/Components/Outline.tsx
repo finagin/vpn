@@ -1,33 +1,57 @@
+import { Spin } from '@/Components/Spin';
 import { Outline as OutlineType } from '@/types';
+
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Outline() {
-    const [items, setItems] = useState<OutlineType[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const {
+        data: dataInitial,
+        isError,
+        isFetching: isFetchingInitial,
+    } = useQuery({
+        queryKey: ['initial'],
+        initialData: [],
+        queryFn: async (): Promise<OutlineType[]> => {
+            const res = await axios.get(route('mini-app.outlines.index'));
+
+            return res?.data?.data ?? [];
+        },
+    });
+
+    const {
+        data: dataRefetch,
+        error,
+        refetch,
+        isFetching: isRefetching,
+    } = useQuery({
+        queryKey: ['fetch-more'],
+        enabled: false,
+        initialData: [],
+        placeholderData: (previous) => previous,
+        queryFn: async (): Promise<OutlineType[]> => {
+            const res = await axios.post(route('mini-app.outlines.store'));
+
+            return [...dataRefetch, res?.data?.data];
+        },
+    });
 
     useEffect(() => {
-        axios
-            .get(route('mini-app.outlines.index'))
-            .then((response) => {
-                setItems(response.data.data as OutlineType[]);
-            })
-            .catch(window.Telegram.WebApp.close);
-    }, []);
+        if (error) {
+            alert(error);
+        }
+    }, [error]);
 
-    const handleAdd = () => {
-        if (loading) return;
+    if (isError) {
+        return window.Telegram.WebApp.close();
+    }
 
-        setLoading(true);
+    const handleAdd = async () =>
+        refetch({ throwOnError: true, cancelRefetch: true });
 
-        axios
-            .post(route('mini-app.outlines.store'))
-            .then((response) => {
-                setItems([response.data.data as OutlineType, ...items]);
-            })
-            .catch((error) => alert(error.message))
-            .finally(() => setLoading(false));
-    };
+    const items = [...dataInitial, ...dataRefetch];
+    const isLoading = isFetchingInitial || isRefetching;
 
     return (
         <>
@@ -35,13 +59,13 @@ export default function Outline() {
                 {items.length < 100 && (
                     <button
                         onClick={handleAdd}
-                        disabled={loading}
-                        className="mt-4 flex cursor-pointer items-center justify-center rounded bg-gray-200 p-4 shadow disabled:bg-white"
+                        disabled={isLoading}
+                        className="mt-4 flex h-14 cursor-pointer items-center justify-center rounded bg-gray-200 p-4 shadow"
                     >
-                        Generate new key!
+                        {isLoading ? <Spin /> : 'Generate new key!'}
                     </button>
                 )}
-                {items.map((outline: OutlineType, index: number) => (
+                {items.map((outline, index: number) => (
                     <a
                         key={index}
                         href={outline.url}

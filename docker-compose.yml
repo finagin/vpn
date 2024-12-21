@@ -30,7 +30,7 @@ services:
             - selenium
             - mailpit
     pgsql:
-        image: 'postgres:17'
+        image: 'postgres:alpine'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -40,7 +40,6 @@ services:
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
             - 'sail-pgsql:/var/lib/postgresql/data'
-            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
         networks:
             - sail
         healthcheck:
@@ -65,6 +64,10 @@ services:
             - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
         networks:
             - sail
+        healthcheck:
+            test: [CMD, nc, -z, "127.0.0.1", "11211"]
+            retries: 3
+            timeout: 5s
     typesense:
         image: 'typesense/typesense:27.1'
         ports:
@@ -118,10 +121,7 @@ services:
         volumes:
             - './:/var/www/html'
         working_dir: '/var/www/html'
-        command:
-            - 'composer'
-            - 'install'
-            - '--ignore-platform-reqs'
+        command: [composer, install, --ignore-platform-reqs]
         profiles:
             - init
 networks:

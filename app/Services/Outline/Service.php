@@ -2,6 +2,8 @@
 
 namespace App\Services\Outline;
 
+use Illuminate\Support\Arr;
+
 /**
  * @template TAccessKey of array{id: int, name: string, password: string, port: int, method: string, accessUrl: string, bytesTransferred: int}
  *
@@ -12,6 +14,16 @@ readonly class Service implements Contract
     public function __construct(
         private ApiClient $client,
     ) {}
+
+    /**
+     * @throws \Illuminate\Http\Client\ConnectionException
+     */
+    public function commonLimit(): int
+    {
+        return $this->client
+            ->get('server')
+            ->json('accessKeyDataLimit.bytes');
+    }
 
     /**
      * @throws \Illuminate\Http\Client\ConnectionException
@@ -70,8 +82,9 @@ readonly class Service implements Contract
     private function enrichAccessKey(array $key): array
     {
         return [
-            ...$key,
-            'bytesTransferred' => $this->transfer($key['id']),
+            ...Arr::except($key, 'dataLimit'),
+            'limit' => data_get($key, 'dataLimit.bytes', $this->commonLimit()),
+            'spending' => $this->transfer($key['id']),
         ];
     }
 }

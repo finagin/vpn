@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('telegrams', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('first_name');
-            $table->string('last_name');
-            $table->string('username');
-            $table->string('language_code');
-            $table->boolean('is_premium');
-            $table->boolean('allows_write_to_pm');
-            $table->string('photo_url');
+            $table->string('last_name')->nullable();
+            $table->string('username')->nullable();
+            $table->string('language_code')->nullable();
+            $table->boolean('is_premium')->nullable();
+            $table->boolean('allows_write_to_pm')->nullable();
+            $table->string('photo_url')->nullable();
             $table->timestamps();
         });
     }

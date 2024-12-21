@@ -13,7 +13,8 @@ export interface Outline {
     id: number;
     name: string;
     url: string;
-    spending: string;
+    limit: number;
+    spending: number;
 
-    user: User;
+    user?: User;
 }

@@ -1,16 +1,12 @@
 services:
     laravel.test:
-        volumes:
-            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        container_name: vpn
         depends_on:
             pgsql:
-                required: false
                 condition: service_healthy
             redis:
-                required: false
                 condition: service_healthy
             memcached:
-                required: false
                 condition: service_healthy
             typesense:
                 required: false
@@ -24,13 +20,18 @@ services:
             mailpit:
                 required: false
                 condition: service_started
+        networks:
+            - nginx
     pgsql:
+        image: 'postgres:17.2-alpine'
         profiles:
             - pgsql
     redis:
+        image: 'redis:7.4-alpine'
         profiles:
             - redis
     memcached:
+        image: 'memcached:1.6-alpine'
         profiles:
             - memcached
     typesense:
@@ -45,3 +46,6 @@ services:
     mailpit:
         profiles:
             - mailpit
+networks:
+    nginx:
+        external: true

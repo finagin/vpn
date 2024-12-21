@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOutlineRequest as StoreRequest;
 use App\Http\Resources\Outline as OutlineResource;
 use App\Models\Outline;
 use App\Models\User;
@@ -25,7 +26,7 @@ class OutlineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, #[CurrentUser] User $user): Response|JsonResource
+    public function store(StoreRequest $request, #[CurrentUser] User $user): Response|JsonResource
     {
         return OutlineResource::make(
             $user->outlines()->create()

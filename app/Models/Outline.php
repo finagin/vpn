@@ -33,7 +33,7 @@ class Outline extends Model
      */
     protected $casts = [
         'id' => 'int',
-        'bytesTransferred' => 'int',
+        'spending' => 'int',
     ];
 
     /**
@@ -42,7 +42,6 @@ class Outline extends Model
      * @var list<string>
      */
     protected $appends = [
-        'spending',
         'url',
     ];
 
@@ -102,23 +101,13 @@ class Outline extends Model
     /**
      * @return Attribute<string, string>
      */
-    public function spending(): Attribute
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attributes) => ($attributes['bytesTransferred'] ?? 0).' / 100 GB',
-        );
-    }
-
-    /**
-     * @return Attribute<string, string>
-     */
     public function url(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => sprintf(
                 '%s#%s',
                 $attributes['accessUrl'],
-                rawurlencode('Finagin\'s Outline'),
+                rawurlencode("Finagin's Outline $this->name"),
             ),
         );
     }

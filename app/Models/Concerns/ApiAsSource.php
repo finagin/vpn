@@ -2,6 +2,7 @@
 
 namespace App\Models\Concerns;
 
+use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Arr;
@@ -19,7 +20,7 @@ trait ApiAsSource
     // <editor-fold desc="Boot and initialize trait">
     public static function bootApiAsSource(): void
     {
-        app('config')->set('database.connections.'.static::class, [
+        Container::getInstance()->make('config')->set('database.connections.'.static::class, [
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
@@ -50,19 +51,19 @@ trait ApiAsSource
     /**
      * @return array<array-key, TModel>
      */
-    abstract public function getRows(): array;
+    abstract protected function getRows(): array;
 
     /**
      * @return array<string, string>
      */
-    public function getSchema(): array
+    private function getSchema(): array
     {
         return $this->schema ?? [];
     }
     // </editor-fold>
 
     // <editor-fold desc="Migration and filling">
-    protected function migrate(): static
+    private function migrate(): static
     {
         $this->getConnection()->getSchemaBuilder()->create($this->getTable(), function (Blueprint $table) {
             $schema = $this->getMigrationSchema();
@@ -76,13 +77,14 @@ trait ApiAsSource
             }
 
             $this->usesTimestamps() && ! array_intersect($this->getDates(), array_keys($schema))
-            && $table->timestamps();
+                ? $table->timestamps()
+                : value(null);
         });
 
         return $this;
     }
 
-    protected function filling(): static
+    private function filling(): static
     {
         foreach (array_chunk($this->getRows(), 100) as $inserts) {
             static::insert($inserts);

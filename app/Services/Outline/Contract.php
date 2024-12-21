@@ -7,6 +7,8 @@ namespace App\Services\Outline;
  */
 interface Contract
 {
+    public function commonLimit(): int;
+
     /**
      * @return ($keyId is null ? iterable<int, int> : int)
      */

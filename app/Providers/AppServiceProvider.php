@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
 
         Vite::prefetch(concurrency: 3);
 
-        URL::forceRootUrl('https://vpn.kool.live');
         URL::forceHttps();
 
         Auth::extend('telegram-init-data', fn (Application $app, string $name, array $config) => new TelegramGuard(

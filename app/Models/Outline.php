@@ -23,6 +23,7 @@ class Outline extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'name',
         'password',
     ];
 
@@ -62,11 +63,11 @@ class Outline extends Model
      */
     protected static function booted(): void
     {
-        static::creating(function (Outline $outline) {
+        static::saving(fn (Outline $outline) => $outline->isDirty(['name', 'password']) &&
             $outline->setRawAttributes(Facade::create(Arr::only(
                 $outline->getAttributes(), ['name', 'password']
-            )));
-        });
+            )))
+        );
     }
 
     /**

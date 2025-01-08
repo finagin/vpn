@@ -5,7 +5,7 @@ import fs from 'fs';
 
 export default defineConfig(({command, mode}) => {
     const env = loadEnv(mode, process.cwd(), '');
-    const host = URL.parse(env.APP_URL).hostname;
+    const host = URL.parse(env.APP_URL)?.hostname;
 
     return {
         plugins: [

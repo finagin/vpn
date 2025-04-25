@@ -1,0 +1,18 @@
+services:
+    laravel.test:
+        build:
+            target: develop
+        volumes:
+            - .:/var/www/html
+            - ./docker-entrypoint.sh:/usr/local/bin/entrypoint
+            - ./vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql
+    nginx:
+        labels:
+            - 'traefik.enable=true'
+        volumes:
+            - .:/var/www/html
+        networks:
+            - traefik
+networks:
+    traefik:
+        external: true

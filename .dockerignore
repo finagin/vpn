@@ -8,7 +8,8 @@ storage/framework/views/*
 storage/logs/*
 storage/*.key
 
-# Vendor test files
+# App and vendor test files
+tests
 vendor/**/test*
 vendor/**/tests*
 vendor/**/Tests*

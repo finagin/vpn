@@ -3,7 +3,9 @@ includes:
 
 parameters:
 
-    phpVersion: 80225
+    phpVersion:
+        min: 80225
+        max: 80406
 
     level: 8
 
@@ -12,3 +14,6 @@ parameters:
         - config
         - database
         - routes
+
+    editorUrl: 'phpstorm://open?file=%env.IGNITION_LOCAL_SITES_PATH%%%relFile%&line=%%line%%'
+    editorUrlTitle: '%%relFile%%:%%line%%'

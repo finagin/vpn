@@ -16,7 +16,7 @@ RUN npm run build
 
 FROM php:${PHP_VERSION}-fpm-alpine${ALPINE_VERSION} AS base
 
-ENV XDEBUG_MODE=off
+ENV APP_USER=www-data
 ENV APP_ENV=production
 
 RUN apk add --no-cache bash fcgi icu-data-full icu-dev imagemagick-dev libjpeg-turbo-dev libpng-dev postgresql-dev \
@@ -26,9 +26,6 @@ RUN apk add --no-cache bash fcgi icu-data-full icu-dev imagemagick-dev libjpeg-t
     && docker-php-ext-enable bcmath curl gd imagick imap intl mbstring redis soap xml zip
 
 COPY --from=composer:lts /usr/bin/composer /usr/bin/composer
-
-# Needs for integrate with Laravel Sail
-RUN adduser -s /bin/bash -DH -G www-data -u 1337 sail
 
 WORKDIR /var/www/html
 
@@ -41,8 +38,14 @@ COPY --from=front /app/public /var/www/html/public
 COPY docker-entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod +x /usr/local/bin/entrypoint
 
-RUN if [ "$XDEBUG_MODE" != "off" ]; then pecl install xdebug && docker-php-ext-enable xdebug; fi
-
 VOLUME /var/www/html/storage/app
 
 ENTRYPOINT ["entrypoint"]
+
+
+FROM base AS develop
+
+RUN apk add --no-cache git && pecl install xdebug && docker-php-ext-enable xdebug;
+
+
+FROM base AS prod

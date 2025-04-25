@@ -6,11 +6,10 @@ services:
             args:
                 PHP_VERSION: 8.2
                 ALPINE_VERSION: ${ALPINE_VERSION:-3.21}
-        image: finagin/vpn:latest
+        image: finagin/vpn:${CONTAINER_VERSION:-latest}
         pull_policy: always
         restart: unless-stopped
         environment:
-            VIRTUAL_HOST: '${NGINX_PROXY_HOST:-_}'
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'

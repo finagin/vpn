@@ -47,5 +47,8 @@ FROM base AS develop
 
 RUN apk add --no-cache git && pecl install xdebug && docker-php-ext-enable xdebug;
 
+COPY --from=front /usr/local/bin /usr/local/bin
+COPY --from=front /usr/local/lib/node_modules /usr/local/lib/node_modules
+
 
 FROM base AS prod

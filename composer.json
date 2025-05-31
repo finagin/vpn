@@ -56,7 +56,12 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
-        ]
+        ],
+        "check:outdated": "composer outdated --direct --strict --minor-only",
+        "check:style": "pint --test",
+        "check:types": "phpstan analyse --ansi --memory-limit 256M",
+        "check:tests": "echo 'Tests is not configured yet' && exit 1",
+        "checks": ["@check:outdated", "@check:style", "@check:types", "@check:tests"]
     },
     "extra": {
         "laravel": {

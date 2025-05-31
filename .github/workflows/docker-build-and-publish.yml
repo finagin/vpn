@@ -1,0 +1,15 @@
+on:
+  push:
+    tags: [ "*" ]
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+    paths-ignore: [ ".github", "tests" ]
+  schedule: [ { cron: "0 0 * * *" } ]
+
+jobs:
+  docker-build-and-publish:
+    uses: finagin/finagin/.github/workflows/docker-build-and-publish.yml@master
+    secrets: inherit
+    permissions:
+      packages: write

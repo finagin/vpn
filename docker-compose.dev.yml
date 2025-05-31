@@ -1,47 +1,40 @@
 services:
     laravel.test:
-        volumes:
-            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        build:
+            target: develop
         depends_on:
-            pgsql:
-                required: false
-                condition: service_healthy
-            redis:
-                required: false
-                condition: service_healthy
-            memcached:
-                required: false
-                condition: service_healthy
-            typesense:
-                required: false
-                condition: service_healthy
-            minio:
-                required: false
-                condition: service_healthy
-            selenium:
-                required: false
-                condition: service_healthy
-            mailpit:
-                required: false
+            outline:
                 condition: service_started
-    pgsql:
-        profiles:
-            - pgsql
-    redis:
-        profiles:
-            - redis
-    memcached:
-        profiles:
-            - memcached
-    typesense:
-        profiles:
-            - typesense
-    minio:
-        profiles:
-            - minio
-    selenium:
-        profiles:
-            - selenium
-    mailpit:
-        profiles:
-            - mailpit
+                required: false
+        volumes:
+            - .:/var/www/html
+            - ./docker-entrypoint.sh:/usr/local/bin/entrypoint
+            - ./vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql
+    nginx:
+        labels:
+            - 'traefik.enable=true'
+        volumes:
+            - .:/var/www/html
+        networks:
+            - traefik
+    outline:
+        image: quay.io/outline/shadowbox:${OUTLINE_VERSION:-stable}
+        restart: unless-stopped
+        environment:
+            SB_API_PORT: ${OUTLINE_API_PORT:-50999}
+            SB_API_PREFIX: ${OUTLINE_API_SECRET:-TestSecretKey}
+            SB_STATE_DIR: /root/shadowbox/persisted-state
+            SB_CERTIFICATE_FILE: /root/shadowbox/persisted-state/shadowbox-selfsigned.crt
+            SB_PRIVATE_KEY_FILE: /root/shadowbox/persisted-state/shadowbox-selfsigned.key
+        volumes:
+            - ${SB_STATE_VOLUME:-outline}:/root/shadowbox/persisted-state
+            - ./resources/scripts/ssl-keygen:/usr/local/bin/ssl-keygen
+        networks:
+            - sail
+        entrypoint: [ ssl-keygen ]
+volumes:
+    outline:
+        driver: local
+networks:
+    traefik:
+        external: true

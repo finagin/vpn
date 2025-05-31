@@ -1,0 +1,43 @@
+# Laravel specific files and directories
+bootstrap/cache/*
+public/build/*
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+storage/*.key
+
+# App and vendor test files
+tests
+vendor/**/test*
+vendor/**/tests*
+vendor/**/Tests*
+
+# Node modules
+**/node_modules
+
+# Git and IDE files
+**/.git
+.idea
+**/.gitignore
+**/.gitattributes
+
+# Cache and environment files
+**/.sass-cache
+*.env*
+!.env*.encrypted
+
+# Configuration and documentation files
+phpunit.xml
+README.md
+
+# Docker related files
+Dockerfile
+docker-compose*.yml
+
+# Other files
+.dockerignore
+.editorconfig
+.github
+http-client.*

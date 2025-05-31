@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+if [ -f "${SB_CERTIFICATE_FILE}" ]; then
+    echo "Certificate already exists at ${SB_CERTIFICATE_FILE}. Skipping generation."
+else
+    command -v openssl &> /dev/null || apk add --no-cache openssl
+
+    openssl req \
+        -x509 -nodes -days 36500 -newkey rsa:4096 \
+        -subj "/CN=VPNServer" \
+        -keyout "${SB_PRIVATE_KEY_FILE}" -out "${SB_CERTIFICATE_FILE}" \
+        >&2
+fi
+
+echo "Run original entrypoint script:"
+# Original entrypoint script for quay.io/outline/shadowbox
+exec /cmd.sh

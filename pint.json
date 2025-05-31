@@ -1,0 +1,13 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "heredoc_to_nowdoc": false,
+        "single_line_comment_spacing": false
+    },
+    "exclude": [
+        "lang",
+        "packages",
+        "public",
+        "vendor"
+    ]
+}

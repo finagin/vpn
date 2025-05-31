@@ -41,6 +41,11 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'editor' => [
+        'name' => env('EDITOR_NAME', 'phpstorm'),
+        'base_path' => env('EDITOR_BASE_PATH'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

@@ -2,6 +2,10 @@ services:
     laravel.test:
         build:
             target: develop
+        depends_on:
+            outline:
+                condition: service_started
+                required: false
         volumes:
             - .:/var/www/html
             - ./docker-entrypoint.sh:/usr/local/bin/entrypoint
@@ -13,6 +17,24 @@ services:
             - .:/var/www/html
         networks:
             - traefik
+    outline:
+        image: quay.io/outline/shadowbox:${OUTLINE_VERSION:-stable}
+        restart: unless-stopped
+        environment:
+            SB_API_PORT: ${OUTLINE_API_PORT:-50999}
+            SB_API_PREFIX: ${OUTLINE_API_SECRET:-TestSecretKey}
+            SB_STATE_DIR: /root/shadowbox/persisted-state
+            SB_CERTIFICATE_FILE: /root/shadowbox/persisted-state/shadowbox-selfsigned.crt
+            SB_PRIVATE_KEY_FILE: /root/shadowbox/persisted-state/shadowbox-selfsigned.key
+        volumes:
+            - ${SB_STATE_VOLUME:-outline}:/root/shadowbox/persisted-state
+            - ./resources/scripts/ssl-keygen:/usr/local/bin/ssl-keygen
+        networks:
+            - sail
+        entrypoint: [ ssl-keygen ]
+volumes:
+    outline:
+        driver: local
 networks:
     traefik:
         external: true

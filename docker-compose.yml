@@ -12,7 +12,7 @@ services:
         environment:
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            EDITOR_BASE_PATH: '${PWD}'
         depends_on:
             pgsql:
                 condition: service_healthy
@@ -26,6 +26,7 @@ services:
             - sail
     nginx:
         image: nginx:1.27-alpine${ALPINE_VERSION:-3.21}-slim
+        restart: unless-stopped
         environment:
             NGINX_HOST: '${NGINX_HOST:-_}'
             NGINX_PORT: '${NGINX_PORT:-80}'
